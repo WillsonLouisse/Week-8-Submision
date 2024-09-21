@@ -1,0 +1,44 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "GDP in Malaysia",
+  "width": 800,
+  "height": 400,
+  "projection": {
+    "type": "equalEarth"
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/WillsonLouisse/Assignment-2/refs/heads/main/malaysia-states.topojson",
+    "format": {
+      "type": "topojson",
+      "feature": "states"
+    }
+  },
+  "transform": [
+    {
+      "lookup": "properties.Name",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/WillsonLouisse/Assignment-2/refs/heads/main/A2DataNum.csv"
+        },
+        "key": "STATE",
+        "fields": ["GDP PER CAPITA", "POPULATION"]
+      }
+    },
+    {
+      "calculate": "parseFloat(datum['GDP PER CAPITA'])",
+      "as": "GDP_PER_CAPITA_SUM"
+    }
+  ],
+  "mark": {"type": "geoshape"},
+  "encoding": {
+    "color": {
+      "field": "GDP_PER_CAPITA_SUM",
+      "type": "quantitative"
+    },
+    "tooltip": [
+      {"field": "properties.Name", "type": "nominal", "title": "State:"},
+      {"field": "GDP PER CAPITA", "type": "quantitative", "title": "GDP Per Capita:"},
+      {"field": "POPULATION", "type": "quantitative", "title": "Total Population:"}
+    ]
+  }
+}
